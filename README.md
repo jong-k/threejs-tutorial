@@ -10,6 +10,8 @@
 - 설치: `yarn add -D dat.gui @types/dat.gui`
 
 ## 0. Intro
+> intro-01.ts
+
 Three.js 에서 화면에 무언가를 띄우려면 최소 3가지가 필요하다
 - Scene
 - Camera
@@ -35,6 +37,30 @@ GUI 에서 씬을 변경할 수 있음
   - 문자열: text input
 
 ## 2. Camera
+메서드
+- lookAt(x, y, z): 오브젝트가 x, y, z 를 바라보게 회전 
+
+### Perspective Camera (원근)
+> perspectiveCamera-02.ts
+
+- 사람의 눈이 보는 방식을 모방
+- 3D 렌더링 시 매우 일반적인 투영 방법
+
+생성자 함수 인수
+- fov: field of view (vertical)
+  - view point 에서 오브젝트까지의 거리 (z의 크기)
+- aspect: 가로 / 세로 비율
+- near: 카메라가 보기 시작하는 지점
+- far: 카메라가 최대로 볼 수 있는 지점
+
+### Orthographic Camera (직교)
+> orthographicCamera-03.ts
+
+- 카메라로부터의 거리에 관계 없이 원근이 일정하게 유지되는(정육면체 처럼) 투영 방법
+- 원근법이 없는 2D 화면에서 주로 사용
+
+생성자 함수 인수
+- perspective 와 다르게 fov, aspect 없고 left, right, top, bottom 추가됨
 
 ## To do
 - github pages 로 배포
