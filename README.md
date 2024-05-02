@@ -1,30 +1,40 @@
-# React + TypeScript + Vite
+# Three.js 튜토리얼
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 목차
 
-Currently, two official plugins are available:
+### Stats Panel
+- 프레임(fps), ms(렌더링 소요 시간), mb(할당된 메모리) 및 커스텀 지표를 좌측 탭에 표시 가능
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### Dat GUI
+- 3D 오브젝트 및 카메라의 위치, 회전 등을 간편하게 조작할 수 있는 탭을 제공하는 서드파티 라이브러리
+- 설치: `yarn add -D dat.gui @types/dat.gui`
 
-## Expanding the ESLint configuration
+## 0. Intro
+Three.js 에서 화면에 무언가를 띄우려면 최소 3가지가 필요하다
+- Scene
+- Camera
+- Renderer
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## 1. Scene
+3D 좌표로 Three.js 가 렌더링할 대상을 설정할 수 있다
 
-- Configure the top-level `parserOptions` property like this:
+구성요소
+### background: 배경 색 (null 이면 black)
+- 이미지를 배경으로 설정할 수도 있음
+- 큐브 모양으로 이미지를 설정하여 3차원으로 보이게 할 수도 있음
+- backgroundBlurriness: 배경을 흐리게 설정 가능
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
+여러개의 독립된 씬을 만드는 것도 가능
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+GUI 에서 씬을 변경할 수 있음
+- active scene 변경 함수들의 객체를 만들고 그 객체와 property name, gut button name 을 gui에 전달
+- gui control 객체 구성요소 타입 별 UI
+  - 함수: 버튼
+  - int/float: 슬라이더
+  - boolean: 체크박스
+  - 문자열: text input
+
+## 2. Camera
+
+## To do
+- github pages 로 배포
