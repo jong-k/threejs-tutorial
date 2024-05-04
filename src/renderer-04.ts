@@ -1,7 +1,6 @@
 import "./index.css";
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
-import Stats from "three/addons/libs/stats.module.js";
 
 const scene = new THREE.Scene();
 
@@ -13,7 +12,10 @@ const camera = new THREE.PerspectiveCamera(
 );
 camera.position.z = 1.5;
 
-const renderer = new THREE.WebGLRenderer();
+// const canvas = document.getElementById("canvas") // 이렇게 canvas 엘리먼트를 직접 뽑아서 WebGLRenderer 생성자에 전달할 수 도 있음
+// const renderer = new THREE.WebGLRenderer({ canvas: canvas });
+// 안티 앨리어싱 옵션을 켜면 픽셀이 더 부드럽게 움직임
+const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
@@ -31,18 +33,10 @@ const material = new THREE.MeshNormalMaterial({ wireframe: true });
 const cube = new THREE.Mesh(geometry, material);
 scene.add(cube);
 
-const stats = new Stats();
-document.body.appendChild(stats.dom);
-
 function animate() {
   requestAnimationFrame(animate);
 
-  cube.rotation.x += 0.01;
-  cube.rotation.y += 0.01;
-
   renderer.render(scene, camera);
-
-  stats.update();
 }
 
 animate();

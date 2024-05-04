@@ -62,5 +62,15 @@ GUI 에서 씬을 변경할 수 있음
 생성자 함수 인수
 - perspective 와 다르게 fov, aspect 없고 left, right, top, bottom 추가됨
 
+## 3. Renderer
+Three.js는 기본적으로 WebGLRenderer 를 사용
+- WebGL 사용
+  - GPU 가속을 통한 이미지와 이펙트 처리
+- WebGLRenderer는 HTML Canvas 엘리먼트에 씬과 카메라를 페인트
+
+생성자 함수 인수
+- canvas: 렌더러를 위치시킬 canvas 엘리먼트를 직접 지정할 수 있다
+- antialias: true값을 주면 안티 앨리어싱을 활성화해 픽셀을 부드럽게 움직일 수 있다
+
 ## To do
 - github pages 로 배포
