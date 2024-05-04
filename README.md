@@ -72,5 +72,16 @@ Three.js는 기본적으로 WebGLRenderer 를 사용
 - canvas: 렌더러를 위치시킬 canvas 엘리먼트를 직접 지정할 수 있다
 - antialias: true값을 주면 안티 앨리어싱을 활성화해 픽셀을 부드럽게 움직일 수 있다
 
+## 4. Animation Loop
+리렌더링을 트리거하는 재귀 함수
+- 모니터의 Hz에 따라 함수 호출 빈도가 달라짐
+  - 예) 60Hz -> 60FPS (1초에 60번 리렌더링)
+  - FPS : frame per second
+  - delta time: 바로 직전 프레임을 수행하는데 걸린 시간
+    - 60FPS 의 경우 1/60 초
+
+성능 향상을 위해, 인터랙션(resize, orbit control 변화)이 있을 때만 리렌더링을 할 수 있다
+animate 함수 호출 대신, render 함수를 이벤트 핸들러에서 호출
+
 ## To do
 - github pages 로 배포
