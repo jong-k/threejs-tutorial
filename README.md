@@ -83,5 +83,16 @@ Three.js는 기본적으로 WebGLRenderer 를 사용
 성능 향상을 위해, 인터랙션(resize, orbit control 변화)이 있을 때만 리렌더링을 할 수 있다
 animate 함수 호출 대신, render 함수를 이벤트 핸들러에서 호출
 
+## 5. Object3D
+다양한 오브젝트들의 기본 클래스
+- 3D 공간에서 오브젝트들을 조작하는 메서드와 프로퍼티들을 제공
+- Camera, Renderer도 Object3D의 자식 클래스에 해당
+
+조작 가능한 프로퍼티
+- Rotation
+- Position
+- Scale
+- Visibility
+
 ## To do
 - github pages 로 배포
