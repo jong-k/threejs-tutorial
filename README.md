@@ -105,7 +105,16 @@ Object3D 하위의 Object3D
 - Object3D 는 오직 하나의 부모만 가질 수 있다
 - 그리고 특정 Object3D 의 부모를 동적으로 변경할 수도 있다 (add 메서드)
   - Object 3D 부모를 변경하면, 새로운 부모 Object3D 를 기준으로 position, scale, rotation 등이 업데이트된다
-- 
+
+## 6. Geometries (기하학)
+다양한 종류의 Geometries 존재
+- BoxGeometry (직육면체)
+- CircleGeometry (원)
+- SphereGeometry (구)
+
+동적으로 Mesh의 Geometry 변경 가능 (GUI 등을 통해서)
+- 이 때, animate 를 통해 리렌더링해도 geometry 는 갱신되지 않기 때문에, mesh의 geometry 에 변경내용을 새로 할당해줘야 함
+- transform 변경사항만 animate 때 적용됨
 
 ## To do
 - github pages 로 배포

@@ -98,9 +98,6 @@ cubeFolder
   .onChange(regenerateBoxGeometry);
 cubeFolder.open();
 
-// 변경된 geometry 상태를 업데이트 해주는 함수
-// onChange 이벤트 핸들러에 연결하지 않으면 GUI 에서 geometry 바꿔도 변경되지 않음
-// animate 함수는 transform에만 영향을 끼치고 geometry 변경은 새로 할당해줘야 함
 function regenerateBoxGeometry() {
   const newGeometry = new THREE.BoxGeometry(
     cubeData.width,
