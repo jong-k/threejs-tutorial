@@ -88,11 +88,24 @@ animate 함수 호출 대신, render 함수를 이벤트 핸들러에서 호출
 - 3D 공간에서 오브젝트들을 조작하는 메서드와 프로퍼티들을 제공
 - Camera, Renderer도 Object3D의 자식 클래스에 해당
 
-조작 가능한 프로퍼티
+조작 가능한 프로퍼티 (Object3D Transform)
 - Rotation
 - Position
 - Scale
 - Visibility
+
+### Object3D Hierarchy
+Scene 하위의 Object3D
+- Scene에 다른 Object3D 인스턴스들을 추가할 수 있는데 (add 메서드 사용)
+- 이 Scene 또한 Object3D 클래스를 상속받고 있음
+- 그리고 이 Scene 을 rotate 하거나 scale 하면, Scene에 포함된 모든 Object3D 인스턴스에도 효과가 똑같이 적용된다
+
+Object3D 하위의 Object3D
+- 이미 Scene에 추가된 Object3D 인스턴스에 또 Object3D 인스턴스를 추가할 수 있다 (갯수 제한 없음)
+- Object3D 는 오직 하나의 부모만 가질 수 있다
+- 그리고 특정 Object3D 의 부모를 동적으로 변경할 수도 있다 (add 메서드)
+  - Object 3D 부모를 변경하면, 새로운 부모 Object3D 를 기준으로 position, scale, rotation 등이 업데이트된다
+- 
 
 ## To do
 - github pages 로 배포

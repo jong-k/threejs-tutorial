@@ -45,9 +45,9 @@ renderer.render(scene, camera);
 orbitControls.addEventListener("change", () => {
   renderer.render(scene, camera);
 });
-//
+
 function animate() {
-  //   // window 내장 함수 + animate 재귀 호출
+  // window 내장 함수 + animate 재귀 호출
   requestAnimationFrame(animate);
   //
   //   const deltaTime = clock.getDelta();
@@ -60,5 +60,5 @@ function animate() {
   //
   stats.update();
 }
-//
+
 animate();
