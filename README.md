@@ -116,5 +116,15 @@ Object3D 하위의 Object3D
 - 이 때, animate 를 통해 리렌더링해도 geometry 는 갱신되지 않기 때문에, mesh의 geometry 에 변경내용을 새로 할당해줘야 함
 - transform 변경사항만 animate 때 적용됨
 
+## 7. Materials
+동적으로 Mesh의 Material 변경 가능 (GUI)
+- 이 때, material에 onChange 이벤트 핸들러 부착 필요 
+  - change 후 material 의 needUpdate 프로퍼티를 true로 해줘야 업데이트됨
+
+side
+- front side: 앞에서만 보임 (디폴트)
+- back side: 앞에서 오브젝트의 내용물이 투시되서 다 보임 (뒷면까지 보임)
+- double side: 앞 뒤에서 front side 처럼 보임
+
 ## To do
 - github pages 로 배포
