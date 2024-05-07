@@ -152,5 +152,9 @@ side
   - 즉, Phong은 조명이 없으면 안되지만, Standard는 조명 없어도 environment 있으면 렌더링 가능
 - 렌더링 비용 상
 
+## 8. lil-gui
+다소 오래된 dat-gui 를 대체하는 추세 (게다가 TS로 만들어짐)
+- Three.js 에 내장되어 별도 설치 불필요
+
 ## To do
 - github pages 로 배포
