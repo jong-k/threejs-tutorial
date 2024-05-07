@@ -126,5 +126,31 @@ side
 - back side: 앞에서 오브젝트의 내용물이 투시되서 다 보임 (뒷면까지 보임)
 - double side: 앞 뒤에서 front side 처럼 보임
 
+### Common Materials
+자주 쓰는 4가지 머티리얼 알아보기
+
+1)MeshBasicMaterial
+- solid color
+  - 따라서 가끔 씬에서 안보이는 듯한 느낌을 받을 수 있음 (바닥이나 벽과 색이 동일할 경우)
+- 유일하게 flat shading 불가
+- 렌더링 비용 하
+
+2)MeshNormalMaterial
+- shading: 카메라와 조명의 위치에 따라 polygon이 차지하는 각 픽셀의 색이 달라짐
+  - 예) 좌상단은 항상 블루 우하단은 항상 퍼플
+- MeshBasicMaterial이 씬에서 사라지는 듯한 문제를 해결해줌
+- 렌더링 비용 중
+
+3)MeshPhongMaterial
+- 보다 효과적인 렌더링을 위해 조명이 필요
+- 렌더링 비용 중상
+
+4)MeshStandardMaterial
+- Physically Based Rendering: MeshPhongMaterial 방식보다 더 정교한 방식
+- 보다 효과적인 렌더링을 위해 조명이 필요
+  - 추가적으로 scene 에 environment 를 더 활용할 수 있음
+  - 즉, Phong은 조명이 없으면 안되지만, Standard는 조명 없어도 environment 있으면 렌더링 가능
+- 렌더링 비용 상
+
 ## To do
 - github pages 로 배포
