@@ -156,5 +156,18 @@ side
 다소 오래된 dat-gui 를 대체하는 추세 (게다가 TS로 만들어짐)
 - Three.js 에 내장되어 별도 설치 불필요
 
+## 9. Lights
+주요 Light
+- AmbientLight: 모든 방향에서 전체 scene을 비춤
+- DirectionalLight: 한 방향에서 전체 scene을 비춤
+- PointLight: 3D 위치(x,y,z)에서 모든 방향으로 조명을 비춤. distance와 decay 관리 가능
+  - distance: 0 는 Infinity 와 같음
+- SpotLight: 3D 위치에서 한 방향으로 조명을 비춤. distance, decay, angle, penumbra, target 관리 가능
+  - 예) 태양(광원)이 지구(피사체) 비춘다고 할 때 (광원의 크기가 피사체보다 클 때)
+  - umbra: 피사체 바로 뒤의 짙은 그림자
+  - penumbra: umbra 양 옆으로 생기는 umbra 보다 옅은 그림자 (광원이 피사체보다 커서 생김)
+
+
+
 ## To do
 - github pages 로 배포
