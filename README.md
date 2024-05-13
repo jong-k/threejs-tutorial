@@ -167,7 +167,29 @@ side
   - umbra: 피사체 바로 뒤의 짙은 그림자
   - penumbra: umbra 양 옆으로 생기는 umbra 보다 옅은 그림자 (광원이 피사체보다 커서 생김)
 
+## 10. Shadows
+- Light 설정이 `castShadows=true` 일 경우 그림자가 생긴다
+- PointLight 와 SpotLight 의 경우 (광원이 3D 위치) PerspectiveCamera frustum 을 사용하여 그림자를 계산
+- DirectionalLight 의 경우 OrthographicCamera frustum 을 사용하여 그림자를 계산
 
+### 그림자를 사용하려면1
+renderer 의 shadowMap 프로퍼티를 enable 시켜야 함
+- `renderer.shadowMap.enabled = true`
+- 추가로 shadow map 타입도 설정 가능
+ 
+대표적인 shadow map
+- BasicShadowMap: 필터링되지 않은 shadow map. 가장 빠르지만 저품질
+- PCFShadowMap (디폴트): PCF(Percentage-Closer Filtering) 알고리즘을 사용하여 shadow 필터링
+- PCFSoftShadowMap: PCSS(Percentage-Closer Soft Shadows) 알고리즘을 사용
+- VSMShadowMap: VSM(Variant Shadow Map) 알고리즘을 사용. 모든 shadow receiver 들이 shadow 를 casting 하게 됨
+
+### 그림자를 사용하려면2
+light 의 castShadow 프로퍼티를 true로 설정
+- `directionalLight.castShadow = true`
+
+추가로 그림자를 표시할 mesh 에도 castShadow, receiveShadow 프로퍼티를 true로 설정해야 함
+- `box.castShadow = true`
+- `ground.receiveShadow = true`
 
 ## To do
 - github pages 로 배포
