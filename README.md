@@ -211,5 +211,32 @@ light
 - 초기 렌더링이 빠르고 쉽게 씬에 추가 가능
 - light 갯수가 많아질 수록 매 프레임마다 필요한 연산이 증가
 
+## 12. Loading Assets
+Three.js 깃허브의 example object 사용하기
+- 오브젝트 파일 URL(github~ 로 시작하는)을 그대로 프로젝트에서 사용하여 가져오면 CORS 에러 발생
+  - 깃허브에서 스크립트에서 파일을 다운받지 못하게 차단했기 때문에
+  - CDN을 사용하면 된다
+- jsdelivr 사용하여 Github 주소 입력하여 CDN 링크 받기
+
+ES6 Import 방식으로 static asset 불러오기 (복잡)
+- 확장자가 다른 파일의 경우, TS에게 이것이 모듈임을 알려줘야 함
+  - type 선언 필요 (root에 index.d.ts 처럼 만들기)
+- 예시
+```ts
+declare module "*.png"
+declare module "*.hdr"
+declare module "*.glb"
+```
+- 파일들을 src 아래로 위치 시킴 (함께 번들링)
+- 이후 vite 설정파일에서 확장자들을 등록해줘야 함
+- 예시
+```js
+import { defineConfig } from 'vite'
+
+export default defineConfig({
+  // png 는 따로 추가 안해도 됨
+  assetsInclude: ['**/*.hdr', '**/*.glb'],
+})
+```
 ## To do
 - github pages 로 배포
