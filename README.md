@@ -191,5 +191,25 @@ light 의 castShadow 프로퍼티를 true로 설정
 - `box.castShadow = true`
 - `ground.receiveShadow = true`
 
+## 11. Environment Maps
+PBR(물리 기반 렌더링) materials 의 경우 씬에 light 대신 Environment Map을 설정할 수 있다
+- MeshStandardMaterial
+- MeshPhysicalMaterial
+
+environment map 을 설정하면 cast, receive shadow 사용 불가 
+
+map 이미지
+- map 에 사용될 이미지 형식은 HDR(High Dynamic Range)이 권장됨
+- HDR은 PNG 나 JPEG 보다 더 정교하고 파일 용량이 큼
+
+### 성능 비교
+environment map
+- 초기 렌더링이 느림 (일반적으로 다운로드된 이미지에서 생성되므로)
+- 매 프레임마다 추가적인 연산 불필요하여 light 보다 더 빠르게 렌더링됨
+
+light
+- 초기 렌더링이 빠르고 쉽게 씬에 추가 가능
+- light 갯수가 많아질 수록 매 프레임마다 필요한 연산이 증가
+
 ## To do
 - github pages 로 배포
