@@ -238,5 +238,42 @@ export default defineConfig({
   assetsInclude: ['**/*.hdr', '**/*.glb'],
 })
 ```
+
+## 13. Loading Assets
+Three.js 의 모든 Loader 들은 THREE.Loader 클래스에 기반함 (예 GLTFLoader)
+- THREE.Loader 는 THREE.LoadingManager 객체를 가지며 아래 정보들을 갖고 있음
+  - 리소스 로딩 시작 시점
+  - 로딩 완료 시점: onLoad 콜백
+  - 다운로드 진행 상황: onProgress
+  - 리소스 다운로드 시도 중 오류가 발생했는지 여부: onError
+
+clone 메서드를 사용하여 이미 로딩한 오브젝트를 복사해서 사용할 수 있다
+- 이 경우, 여러번 비동기적으로 로딩할 필요가 없어서 더 효율적이다
+
+loadAsync 메서드를 사용하여 로더의 순서를 보장할 수 있다
+- 로딩 보장이 선결되어야 하는 경우 유용하다
+
+## 14. glTF Loader
+> Three.js scene에 glTF 모델을 추가하기 위한 로더
+
+glTF
+- 3D 씬과 모델의 효율적인 전송 및 로딩을 위한 스펙
+- 3D 에셋의 크기와 해당 에셋의 압축을 풀고 사용하는 데 필요한 런타임 처리를 최소화
+- glTF 파일에는 다음의 요소들이 하나 이상 포함되어 있음 
+  - scenes
+  - meshes
+  - materials
+  - textures
+  - skins
+  - skeletons
+  - morph targets
+  - animations
+  - lights
+  - cameras
+- 확장자는 2가지가 있음
+  - .gltf: JSON
+  - .glb: Binary
+
+
 ## To do
 - github pages 로 배포
