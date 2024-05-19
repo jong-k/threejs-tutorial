@@ -274,6 +274,21 @@ glTF
   - .gltf: JSON
   - .glb: Binary
 
+## 15. Raycaster
+> 씬의 3D 포인트(x, y, z)에서 벡터를 생성하고 벡터가 교차하는 오브젝트를 감지할 수 있다
+
+- 주로 3D Scene에서 마우스 피킹 오브젝트에 사용됨
+
+사용 예시
+- Raycaster 위치와 방향 설정
+  - set, setFromCamera 메서드 활용
+- Ray(벡터)와 교차하는 Scene 오브젝트 정보 확인
+  - intersectObject, intersectObjects 메서드 활용
+  - 주로 아래의 정보들을 확인
+    - Raycaster 부터 교차점까지의 거리
+    - 교차점의 3D 위치
+    - 교차된 오브젝트와 그 오브젝트의 면과 방향, UV 좌표
+
 
 ## To do
 - github pages 로 배포
