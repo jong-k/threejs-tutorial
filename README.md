@@ -289,6 +289,11 @@ glTF
     - 교차점의 3D 위치
     - 교차된 오브젝트와 그 오브젝트의 면과 방향, UV 좌표
 
+## 16. Orbit Controls
+사용 방법
+- Core Three.js 에 해당하지 않아서 따로 import 해서 사용(addon)
+  - THREE.OrbitControl 이렇게 사용 X
+
 
 ## To do
 - github pages 로 배포
