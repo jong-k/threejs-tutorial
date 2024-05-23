@@ -294,6 +294,24 @@ glTF
 - Core Three.js 에 해당하지 않아서 따로 import 해서 사용(addon)
   - THREE.OrbitControl 이렇게 사용 X
 
+## 17. Lerp
+> Linear interpolation (선형 보간)
+
+오브젝트의 위치, 스케일, 머티리얼 등에 애니메이션 효과를 넣을 수 있다(lerping)
+- MathUtils.lerp() 메서드 사용
+- 주어진 간격(x ~ y)을 기준으로, 선형 보간된 값 반환
+- t = 0 에서 x
+- t = 1 에서 y
+
+```ts
+/*
+x – Start point.
+y – End point.
+t – interpolation factor in the closed interval [0, 1]
+ */
+function lerp(x: number, y: number, t: number): number {}
+```
+
 
 ## To do
 - github pages 로 배포

@@ -1,25 +1,152 @@
 import "./index.css";
-import * as THREE from "three";
-// addon 에 해당 (Core 에 없음)
+import {
+  Mesh,
+  Color,
+  MeshStandardMaterial,
+  BufferGeometry,
+  Raycaster,
+  Scene,
+  SpotLight,
+  PerspectiveCamera,
+  WebGLRenderer,
+  VSMShadowMap,
+  BoxGeometry,
+  CylinderGeometry,
+  TetrahedronGeometry,
+  PlaneGeometry,
+  Vector2,
+  Clock,
+  EquirectangularReflectionMapping,
+  MeshPhongMaterial,
+  Vector3,
+  MathUtils,
+} from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+import { RGBELoader } from "three/addons/loaders/RGBELoader.js";
 import Stats from "three/addons/libs/stats.module.js";
 
-const scene = new THREE.Scene();
+// y 포지션 차이가 0.001 보다 작아지면 연산 끝냄
+function lerp(from: number, to: number, speed: number) {
+  const amount = (1 - speed) * from + speed * to;
+  return Math.abs(from - to) < 0.001 ? to : amount;
+}
 
-const gridHelper = new THREE.GridHelper();
-gridHelper.position.y = -0.5;
-scene.add(gridHelper);
+class Pickable extends Mesh {
+  hovered = false;
+  clicked = false;
+  colorTo: Color;
+  defaultColor: Color;
+  geometry: BufferGeometry;
+  material: MeshStandardMaterial;
+  v = new Vector3();
 
-const camera = new THREE.PerspectiveCamera(
+  constructor(
+    geometry: BufferGeometry,
+    material: MeshStandardMaterial,
+    colorTo: Color,
+  ) {
+    super();
+    this.geometry = geometry;
+    this.material = material;
+    this.colorTo = colorTo;
+    this.defaultColor = material.color.clone();
+    this.castShadow = true;
+  }
+
+  update(delta: number) {
+    // this.rotation.x += delta / 2;
+    // this.rotation.y += delta / 2;
+
+    // 클릭하면 y축 기준 0 ~ 1 사이를 수직 이동 (애니메이션 효과)
+    // this.clicked
+    //   ? (this.position.y = MathUtils.lerp(this.position.y, 1, delta * 5))
+    //   : (this.position.y = MathUtils.lerp(this.position.y, 0, delta * 5));
+    this.clicked
+      ? (this.position.y = lerp(this.position.y, 1, delta * 5))
+      : (this.position.y = lerp(this.position.y, 0, delta * 5));
+    // 모니터 성능에 따라 프레임이 달라질 수 있기 때문에 delta 값을 사용하여 보정
+    // console.log(this.position.y); // MathUtils.lerp 가 0 ~ 1 사이를 정확하게 이동하고 끝나는 것이 아니기 때문에, update 될 때마다 계속 연산이 수행됨
+
+    // 컬러만 변경
+    // this.hovered
+    //   ? this.material.color.lerp(this.colorTo, delta * 10)
+    //   : this.material.color.lerp(this.defaultColor, delta * 10);
+
+    // 컬러 및 거칠기와 금속 재질도 변경
+    this.hovered
+      ? (this.material.color.lerp(this.colorTo, delta * 10),
+        (this.material.roughness = lerp(
+          this.material.roughness,
+          0,
+          delta * 10,
+        )),
+        (this.material.metalness = lerp(
+          this.material.metalness,
+          1,
+          delta * 10,
+        )))
+      : (this.material.color.lerp(this.defaultColor, delta),
+        (this.material.roughness = lerp(this.material.roughness, 1, delta)),
+        (this.material.metalness = lerp(this.material.metalness, 0, delta)));
+
+    // this.clicked
+    //   ? this.scale.set(
+    //       MathUtils.lerp(this.scale.x, 1.5, delta * 5),
+    //       MathUtils.lerp(this.scale.y, 1.5, delta * 5),
+    //       MathUtils.lerp(this.scale.z, 1.5, delta * 5),
+    //     )
+    //   : this.scale.set(
+    //       MathUtils.lerp(this.scale.x, 1.0, delta),
+    //       MathUtils.lerp(this.scale.y, 1.0, delta),
+    //       MathUtils.lerp(this.scale.z, 1.0, delta),
+    //     );
+
+    this.clicked
+      ? this.scale.set(
+          lerp(this.scale.x, 1.5, delta * 5),
+          lerp(this.scale.y, 1.5, delta * 5),
+          lerp(this.scale.z, 1.5, delta * 5),
+        )
+      : this.scale.set(
+          lerp(this.scale.x, 1.0, delta),
+          lerp(this.scale.y, 1.0, delta),
+          lerp(this.scale.z, 1.0, delta),
+        );
+
+    this.clicked ? this.v.set(1.5, 1.5, 1.5) : this.v.set(1.0, 1.0, 1.0);
+    this.scale.lerp(this.v, delta * 5);
+  }
+}
+
+const scene = new Scene();
+
+const spotLight = new SpotLight(0xffffff, 500);
+spotLight.position.set(5, 5, 5);
+spotLight.angle = 0.3;
+spotLight.penumbra = 0.5;
+spotLight.castShadow = true;
+spotLight.shadow.radius = 20;
+spotLight.shadow.blurSamples = 20;
+spotLight.shadow.camera.far = 20;
+scene.add(spotLight);
+
+await new RGBELoader().loadAsync("img/venice_sunset_1k.hdr").then((texture) => {
+  texture.mapping = EquirectangularReflectionMapping;
+  scene.environment = texture;
+});
+
+const camera = new PerspectiveCamera(
   75,
   window.innerWidth / window.innerHeight,
   0.1,
   100,
 );
-camera.position.z = 2;
+camera.position.set(0, 2, 4);
 
-const renderer = new THREE.WebGLRenderer();
+const renderer = new WebGLRenderer({ antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = VSMShadowMap;
 document.body.appendChild(renderer.domElement);
 
 window.addEventListener("resize", () => {
@@ -28,83 +155,102 @@ window.addEventListener("resize", () => {
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
-const info = document.createElement("div");
-info.style.cssText =
-  "position:absolute;bottom:10px;left:10px;color:white;font-family:monospace;font-size: 17px;filter: drop-shadow(1px 1px 1px #000000);";
-document.body.appendChild(info);
-
 const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+controls.maxPolarAngle = Math.PI / 2 + Math.PI / 16; // ~ 100 degrees
 
-camera.lookAt(0.5, 0.5, 0.5); // 카메라가 특정 좌표만 바라보게 만듬
-controls.target.set(0.5, 0.5, 0.5); // 기본값 0,0,0 에서 orbit control 중심점 변경
+const raycaster = new Raycaster();
+const pickables: Pickable[] = []; // used in the raycaster intersects methods
+let intersects;
+const mouse = new Vector2();
 
-// 첫 마우스 다운
-// controls.addEventListener("change", () => console.log("Controls Change"));
-// controls.addEventListener("start", () => console.log("Controls Start Event"));
-// 마지막 마우스업
-// controls.addEventListener("end", () => console.log("Controls End Event"));
+renderer.domElement.addEventListener("pointerdown", (e) => {
+  mouse.set(
+    (e.clientX / renderer.domElement.clientWidth) * 2 - 1,
+    -(e.clientY / renderer.domElement.clientHeight) * 2 + 1,
+  );
 
-// controls.autoRotate = true;
-// controls.autoRotateSpeed = 10;
-// controls.enableDamping = true;
-// controls.dampingFactor = 0.01; // 가속도 제한
-// controls.listenToKeyEvents(window);
+  raycaster.setFromCamera(mouse, camera);
 
-// 기본값은 방향키
-// controls.keys = {
-//   LEFT: "KeyA", // default 'ArrowLeft'
-//   UP: "KeyW", // default 'ArrowUp'
-//   RIGHT: "KeyD", // default 'ArrowRight'
-//   BOTTOM: "KeyS", // default 'ArrowDown'
-// };
-// controls.mouseButtons = {
-//   LEFT: THREE.MOUSE.ROTATE,
-//   MIDDLE: THREE.MOUSE.DOLLY,
-//   RIGHT: THREE.MOUSE.PAN, // 패닝
-// };
-// controls.touches = {
-//   ONE: THREE.TOUCH.ROTATE,
-//   TWO: THREE.TOUCH.DOLLY_PAN,
-// };
-// controls.screenSpacePanning = true;
+  intersects = raycaster.intersectObjects(pickables, false);
 
-// x축 회전각(azimuth) 제한
-// controls.minAzimuthAngle = 0;
-// controls.maxAzimuthAngle = Math.PI / 2;
+  // plane은 클릭해도 Pickable 이 아니라서 반응이 없음
+  // cylinder는 Pickable 이라서 클릭하면 반응 있음
+  // toggles `clicked` property for only the Pickable closest to the camera
+  intersects.length &&
+    ((intersects[0].object as Pickable).clicked = !(
+      intersects[0].object as Pickable
+    ).clicked);
 
-// y축 회전각(polar) 제한
-// controls.minPolarAngle = 0;
-// controls.maxPolarAngle = Math.PI;
+  // toggles `clicked` property for all overlapping Pickables detected by the raycaster at the same time
+  // intersects.forEach((i) => {
+  //   ;(i.object as Pickable).clicked = !(i.object as Pickable).clicked
+  // })
+});
 
-// zoom 거리 제한
-// controls.maxDistance = 4;
-// controls.minDistance = 1.5;
+renderer.domElement.addEventListener("mousemove", (e) => {
+  mouse.set(
+    (e.clientX / renderer.domElement.clientWidth) * 2 - 1,
+    -(e.clientY / renderer.domElement.clientHeight) * 2 + 1,
+  );
 
-// controls.enabled = false;
-// controls.enablePan = false;
-// controls.enableRotate = false;
-// controls.enableZoom = false;
+  raycaster.setFromCamera(mouse, camera);
 
-const geometry = new THREE.BoxGeometry();
-const material = new THREE.MeshNormalMaterial({ wireframe: true });
+  intersects = raycaster.intersectObjects(pickables, false);
 
-const cube = new THREE.Mesh(geometry, material);
+  pickables.forEach((p) => (p.hovered = false));
+
+  intersects.length && ((intersects[0].object as Pickable).hovered = true);
+});
+
+const cylinder = new Pickable(
+  new CylinderGeometry(0.66, 0.66),
+  new MeshStandardMaterial({ color: 0x888888 }),
+  new Color(0x008800),
+);
+scene.add(cylinder);
+pickables.push(cylinder);
+
+const cube = new Pickable(
+  new BoxGeometry(),
+  new MeshStandardMaterial({ color: 0x888888 }),
+  new Color(0xff2200),
+);
+cube.position.set(-2, 0, 0);
 scene.add(cube);
+pickables.push(cube);
+
+const pyramid = new Pickable(
+  new TetrahedronGeometry(),
+  new MeshStandardMaterial({ color: "hotpink" }),
+  new Color("orange"),
+);
+pyramid.position.set(2, 0, 0);
+scene.add(pyramid);
+pickables.push(pyramid);
+
+const floor = new Mesh(new PlaneGeometry(20, 20), new MeshPhongMaterial());
+floor.rotateX(-Math.PI / 2);
+floor.position.y = -1.25;
+floor.receiveShadow = true;
+scene.add(floor);
 
 const stats = new Stats();
 document.body.appendChild(stats.dom);
 
+const clock = new Clock();
+let delta = 0;
+
 function animate() {
   requestAnimationFrame(animate);
 
-  controls.update();
+  delta = clock.getDelta();
 
-  info.innerText =
-    "Polar Angle : " +
-    ((controls.getPolarAngle() / -Math.PI) * 180 + 90).toFixed(2) +
-    "°\nAzimuth Angle : " +
-    ((controls.getAzimuthalAngle() / Math.PI) * 180).toFixed(2) +
-    "°";
+  pickables.forEach((p) => {
+    p.update(delta);
+  });
+
+  controls.update();
 
   renderer.render(scene, camera);
 
