@@ -89,6 +89,7 @@ class Pickable extends Mesh {
         (this.material.roughness = lerp(this.material.roughness, 1, delta)),
         (this.material.metalness = lerp(this.material.metalness, 0, delta)));
 
+    // 방법1) x, y, z를 모두 조작하여 스케일 변경
     // this.clicked
     //   ? this.scale.set(
     //       MathUtils.lerp(this.scale.x, 1.5, delta * 5),
@@ -101,18 +102,19 @@ class Pickable extends Mesh {
     //       MathUtils.lerp(this.scale.z, 1.0, delta),
     //     );
 
-    this.clicked
-      ? this.scale.set(
-          lerp(this.scale.x, 1.5, delta * 5),
-          lerp(this.scale.y, 1.5, delta * 5),
-          lerp(this.scale.z, 1.5, delta * 5),
-        )
-      : this.scale.set(
-          lerp(this.scale.x, 1.0, delta),
-          lerp(this.scale.y, 1.0, delta),
-          lerp(this.scale.z, 1.0, delta),
-        );
+    // this.clicked
+    //   ? this.scale.set(
+    //       lerp(this.scale.x, 1.5, delta * 5),
+    //       lerp(this.scale.y, 1.5, delta * 5),
+    //       lerp(this.scale.z, 1.5, delta * 5),
+    //     )
+    //   : this.scale.set(
+    //       lerp(this.scale.x, 1.0, delta),
+    //       lerp(this.scale.y, 1.0, delta),
+    //       lerp(this.scale.z, 1.0, delta),
+    //     );
 
+    // 방법2) 스케일을 1.0 ~ 1.5 사이에서 한번에 변경
     this.clicked ? this.v.set(1.5, 1.5, 1.5) : this.v.set(1.0, 1.0, 1.0);
     this.scale.lerp(this.v, delta * 5);
   }
