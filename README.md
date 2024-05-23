@@ -312,6 +312,19 @@ t – interpolation factor in the closed interval [0, 1]
 function lerp(x: number, y: number, t: number): number {}
 ```
 
+## 18. tween.js
+> 쉽게 애니메이션을 이용할 수 있는 트위닝 엔진 라이브러리 (between 에서 따옴)
+
+오브젝트의 속성값을 부드럽게 바꿀 수 있음
+- 소요 시간 (변경에 따른)
+- 변경 전 딜레이
+- 트윈이 업데이트될 때마다 무엇을 업데이트할지, 뭘 반복할지
+
+설치
+- `yarn add @tweenjs/tween.js`
+
+
+
 
 ## To do
 - github pages 로 배포
