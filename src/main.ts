@@ -1,20 +1,20 @@
 import "./index.css";
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
-import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { RGBELoader } from "three/addons/loaders/RGBELoader.js";
+import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import Stats from "three/addons/libs/stats.module.js";
-import * as TWEEN from "@tweenjs/tween.js";
 
 const scene = new THREE.Scene();
 
-const gridHelper = new THREE.GridHelper();
-gridHelper.position.y = -1;
+const gridHelper = new THREE.GridHelper(100, 100);
 scene.add(gridHelper);
 
-await new RGBELoader().loadAsync("img/venice_sunset_1k.hdr").then((texture) => {
+new RGBELoader().load("img/venice_sunset_1k.hdr", (texture) => {
   texture.mapping = THREE.EquirectangularReflectionMapping;
   scene.environment = texture;
+  scene.background = texture;
+  scene.backgroundBlurriness = 1;
 });
 
 const camera = new THREE.PerspectiveCamera(
@@ -23,12 +23,9 @@ const camera = new THREE.PerspectiveCamera(
   0.1,
   100,
 );
-camera.position.set(0, 1, 4);
+camera.position.set(0.1, 1, 1);
 
 const renderer = new THREE.WebGLRenderer({ antialias: true });
-renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 0.8;
-renderer.shadowMap.enabled = true;
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
@@ -36,127 +33,109 @@ window.addEventListener("resize", () => {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
-  //render() //this line is unnecessary if you are re-rendering within the animation loop
 });
 
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
-// controls.addEventListener("change", render); //this line is unnecessary if you are re-rendering within the animation loop
-
-let suzanne: THREE.Mesh, plane: THREE.Mesh;
-
-new GLTFLoader().load("models/suzanne_scene2.glb", (gltf) => {
-  suzanne = gltf.scene.getObjectByName("Suzanne") as THREE.Mesh;
-  suzanne.castShadow = true;
-  (
-    (suzanne.material as THREE.MeshStandardMaterial).map as THREE.Texture
-  ).colorSpace = THREE.LinearSRGBColorSpace;
-
-  plane = gltf.scene.getObjectByName("Plane") as THREE.Mesh;
-  plane.scale.set(50, 1, 50);
-  (plane.material as THREE.MeshStandardMaterial).envMap = scene.environment; // since three@163, we need to set `envMap` before changing `envMapIntensity` has any effect.
-  (plane.material as THREE.MeshStandardMaterial).envMapIntensity = 0.05;
-  plane.receiveShadow = true;
-
-  // spotlight 는 기본적으로 0, 0, 0 을 향함
-  const spotLight = gltf.scene.getObjectByName("Spot") as THREE.SpotLight;
-  spotLight.intensity /= 500;
-  spotLight.castShadow = true;
-  spotLight.target = suzanne; // suzanne 중심점을 향하게 조정
-
-  scene.add(gltf.scene);
-
-  // render();
-});
-
-const raycaster = new THREE.Raycaster();
-const mouse = new THREE.Vector2();
-
-renderer.domElement.addEventListener("dblclick", (e) => {
-  mouse.set(
-    (e.clientX / renderer.domElement.clientWidth) * 2 - 1,
-    -(e.clientY / renderer.domElement.clientHeight) * 2 + 1,
-  );
-
-  raycaster.setFromCamera(mouse, camera);
-  const intersects = raycaster.intersectObjects([suzanne, plane], false);
-
-  if (intersects.length) {
-    const p = intersects[0].point;
-
-    // 더블클릭한 좌표로 시점을 바로 변경
-    // controls.target.set(p.x, p.y, p.z);
-
-    // 더블클릭한 좌표로 시점을 서서히 변경 (트위닝)
-    //  Tweening controls.target
-    // new TWEEN.Tween(controls.target)
-    //   .to(
-    //     {
-    //       x: p.x,
-    //       y: p.y,
-    //       z: p.z,
-    //     },
-    //     500,
-    //   )
-    //   // .delay(1000) // 1초 딜레이
-    //   .easing(TWEEN.Easing.Cubic.In) // 가속도
-    //   //.onUpdate(() => render())
-    //   .start();
-
-    // slding x,z
-    new TWEEN.Tween(suzanne.position)
-      .to(
-        {
-          x: p.x,
-          z: p.z,
-        },
-        500,
-      )
-      .start();
-
-    // going up
-    new TWEEN.Tween(suzanne.position)
-      .to(
-        {
-          y: p.y + 3,
-        },
-        250,
-      )
-      .easing(TWEEN.Easing.Cubic.Out)
-      .start()
-      .onComplete(() => {
-        // going down
-        new TWEEN.Tween(suzanne.position)
-          .to(
-            {
-              y: p.y + 1, // +1 해주는 이유: 안해주면 중심점이 바로 y = 0 위치로 이동되어 오브젝트가 땅에 꽂혀버림
-            },
-            250,
-          )
-          .delay(250)
-          //.easing(TWEEN.Easing.Cubic.In)
-          .start();
-      });
-  }
-});
+controls.target.set(0, 0.75, 0);
 
 const stats = new Stats();
 document.body.appendChild(stats.dom);
 
+function lerp(from: number, to: number, speed: number) {
+  const amount = (1 - speed) * from + speed * to;
+  return Math.abs(from - to) < 0.001 ? to : amount;
+}
+
+let mixer: THREE.AnimationMixer;
+const animationActions: { [key: string]: THREE.AnimationAction } = {};
+let activeAction: THREE.AnimationAction;
+let speed = 0;
+let toSpeed = 0;
+
+// walk only 모델 로딩
+// new GLTFLoader().load("models/eve$@walk.glb", (gltf) => {
+//   mixer = new THREE.AnimationMixer(gltf.scene);
+//   // console.log(gltf);
+//
+//   mixer.clipAction(gltf.animations[0]).play();
+//
+//   scene.add(gltf.scene);
+// });
+
+async function loadEve() {
+  const loader = new GLTFLoader();
+  const [eve, idle, run] = await Promise.all([
+    loader.loadAsync("models/eve$@walk.glb"),
+    loader.loadAsync("models/eve@idle.glb"),
+    loader.loadAsync("models/eve@run.glb"),
+  ]);
+  mixer = new THREE.AnimationMixer(eve.scene);
+  // mixer.clipAction(idle.animations[0]).play(); // idle 만 로딩
+  animationActions["idle"] = mixer.clipAction(idle.animations[0]);
+  animationActions["walk"] = mixer.clipAction(eve.animations[0]);
+  animationActions["run"] = mixer.clipAction(run.animations[0]);
+  animationActions["idle"].play();
+  activeAction = animationActions["idle"];
+  scene.add(eve.scene);
+}
+await loadEve();
+
+const keyMap: { [key: string]: boolean } = {};
+
+const onDocumentKey = (e: KeyboardEvent) => {
+  keyMap[e.code] = e.type === "keydown";
+};
+document.addEventListener("keydown", onDocumentKey, false);
+document.addEventListener("keyup", onDocumentKey, false);
+
+const clock = new THREE.Clock();
+let delta = 0;
+
 function animate() {
   requestAnimationFrame(animate);
 
+  delta = clock.getDelta();
+
   controls.update();
 
-  TWEEN.update();
+  mixer.update(delta);
 
-  render();
+  if (keyMap["KeyW"]) {
+    if (keyMap["ShiftLeft"]) {
+      //run
+      if (activeAction != animationActions["run"]) {
+        activeAction.fadeOut(0.5);
+        animationActions["run"].reset().fadeIn(0.25).play();
+        activeAction = animationActions["run"];
+        toSpeed = 4;
+      }
+    } else {
+      //walk
+      if (activeAction != animationActions["walk"]) {
+        activeAction.fadeOut(0.5);
+        animationActions["walk"].reset().fadeIn(0.25).play();
+        activeAction = animationActions["walk"];
+        toSpeed = 1;
+      }
+    }
+  } else {
+    //idle
+    if (activeAction != animationActions["idle"]) {
+      activeAction.fadeOut(0.5);
+      animationActions["idle"].reset().fadeIn(0.25).play();
+      activeAction = animationActions["idle"];
+      toSpeed = 0;
+    }
+  }
+
+  speed = lerp(speed, toSpeed, delta * 10);
+  gridHelper.position.z -= speed * delta;
+  gridHelper.position.z = gridHelper.position.z % 10;
+
+  renderer.render(scene, camera);
 
   stats.update();
-}
-
-function render() {
-  renderer.render(scene, camera);
 }
 
 animate();

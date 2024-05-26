@@ -323,7 +323,17 @@ function lerp(x: number, y: number, t: number): number {}
 설치
 - `yarn add @tweenjs/tween.js`
 
+## 19. GLTF Animations
+캐릭터 애셋
+- mixamo 사이트에서 캐릭터 + 애니메이션 다운로드
+  - 이 때, 애니메이션 하나만 with skin, 나머지는 더 이상 스킨 필요없으므로 without skin
+- 다운로드된 파일을 블렌더로 열어 .glb 확장자로 import
+- Three.js 프로젝트에서 GLTF Loader 로 사용
 
+Animation Mixer
+- GLTF Loader로 받아온 캐릭터(애니메이션 포함) 오브젝트는 다양한 오브젝트가 합쳐진 형태임
+- Animation Mixer는 씬의 특정 오브젝트에 애니메이션을 적용하는 player 역할
+- 씬의 여러 오브젝트에 독립적으로 애니메이션을 적용하는 경우, 각 오브젝트마다 하나의 Animation Mixer 사용
 
 
 ## To do
