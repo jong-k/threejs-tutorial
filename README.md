@@ -323,6 +323,13 @@ function lerp(x: number, y: number, t: number): number {}
 설치
 - `yarn add @tweenjs/tween.js`
 
+압축
+- `gltf-transform optimize './public/models/eve$@walk.glb' './public/models/eve$@walk_compressed.glb' --compress draco --texture-compress webp`
+- 15mb -> 3mb 감소
+
+Draco Decoder
+- CDN 에서 로딩하거나, Three.js 내부의 모듈을 복사하여 프로젝트 내에 배치하여 사용하는 2가지 방법이 존재
+
 ## 19. GLTF Animations
 캐릭터 애셋
 - mixamo 사이트에서 캐릭터 + 애니메이션 다운로드
@@ -335,6 +342,22 @@ Animation Mixer
 - Animation Mixer는 씬의 특정 오브젝트에 애니메이션을 적용하는 player 역할
 - 씬의 여러 오브젝트에 독립적으로 애니메이션을 적용하는 경우, 각 오브젝트마다 하나의 Animation Mixer 사용
 
+## 20. DRACO
+DRACO Loader
+- Draco 라이브러리로 압축된 geometry를 로드하는데 사용됨
+  - Draco: 3D 메시와 포인트 클라우드의 압축 및 압축 해제를 위한 오픈소스 라이브러리
+- 대표적으로 glTF 파일을 Draco를 사용하여 압축할 수 있고, glTF Loader로 로딩 가능
+  - 이 때, DRACO Loader를 사용하여 파일 압축 해제
+- 압축을 위해 `glTF Transform` 라이브러리를 활용
+- 참고) mixamo에서 받은 캐릭터 + 1애니메이션의 경우, 크기가 15MB에 육박함
+
+glTF Transform 설치
+- `npm install --global @gltf-transform/cli`
+
+압축 vs 비압축
+- 최초 렌더링은 비압축이 빠르다
+  - 압축하는데 시간이 소요되기 때문
+- 렌더링 품질은 거의 차이나지 않음
 
 ## To do
 - github pages 로 배포
