@@ -142,8 +142,8 @@ const characterController = new CharacterController(animationActions);
 const grid = new Grid(scene);
 
 const dracoLoader = new DRACOLoader();
-// dracoLoader.setDecoderPath("https://www.gstatic.com/draco/v1/decoders/"); // loading from a CDN
-dracoLoader.setDecoderPath("jsm/libs/draco/"); // loading from own webserver
+dracoLoader.setDecoderPath("https://www.gstatic.com/draco/v1/decoders/"); // loading from a CDN
+// dracoLoader.setDecoderPath("jsm/libs/draco/"); // loading from own webserver -> node modules 에서 카피
 
 const glTFLoader = new GLTFLoader();
 glTFLoader.setDRACOLoader(dracoLoader);

@@ -354,6 +354,10 @@ DRACO Loader
 glTF Transform 설치
 - `npm install --global @gltf-transform/cli`
 
+draco decoder
+- CDN으로 로딩하거나
+- Three.js node modules에 내장된 example 에서 프로젝트로 카피하여 사용할 수 있음
+
 압축 vs 비압축
 - 최초 렌더링은 비압축이 빠르다
   - 압축하는데 시간이 소요되기 때문
