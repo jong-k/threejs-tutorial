@@ -363,5 +363,21 @@ draco decoder
   - 압축하는데 시간이 소요되기 때문
 - 렌더링 품질은 거의 차이나지 않음
 
+## 21. Rapier: 물리 엔진
+> 강체(Rigid body)에 대한 힘, 속도, 접촉, 제약 조건 등을 계산할 수 있는 물리 엔진
+
+물리 엔진 활용
+- 시간 경과에 따른 물리 속성이나 이벤트 계산 가능
+- Three.js와 독립적으로도 사용 가능
+- Three.js에서는 물리엔진의 연산 결과를 바탕으로 매 렌더링 마다 THREE.Object3D의 정보 업데이트
+  - position (x,y,z)
+  - quaternion (x,y,z,w): 3차원 좌표+방향
+- RAPIER.RigidBody: THREE.Object3D가 복잡한 mesh인 것과 다르게, 단순한 모양이기 때문에 물리 연산이 수월
+
+설치
+- @dimforge/rapier3d 라이브러리를 사용해도 되지만, Vite 환경에서 에러 발생할 수 있음
+- `yarn add @dimforge/rapier3d-compat`
+
+
 ## To do
 - github pages 로 배포
