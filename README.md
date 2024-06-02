@@ -378,6 +378,18 @@ draco decoder
 - @dimforge/rapier3d 라이브러리를 사용해도 되지만, Vite 환경에서 에러 발생할 수 있음
 - `yarn add @dimforge/rapier3d-compat`
 
+### Rapier Debug Renderer
+사용할 asset: obj 파일
+- blender 앱을 활용하여 mesh를 .obj 파일로 export 가능
+- blender 앱을 사용하면 mesh를 console에 찍어보며 자식 오브젝트를 파악하는 것보다 편리하게 확인이 가능해 보임
+
+Rapier 엔진의 그래픽 렌더러가 없어서 Rigid Body 만들 때 시각화가 어려움
+- 이는 에러로 이어질 수 있음
+- world.debugRender() 활용하여 대략적인 실선의 shape 를 만들 수 있음
+
+tri mesh vs convex hull
+- tri mesh: rigid body를 만들 때 조금 더 상세한 물체 표면을 묘사할 수 있음, 연산이 복잡
+- convex hull: 모든 vertex를 연결하는 최소 도형을 그리기 때문에 tri mesh 보다 덜 정밀하고 부피가 큼 (대신 연산이 빠름)
 
 ## To do
 - github pages 로 배포

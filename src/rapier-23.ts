@@ -6,6 +6,7 @@ import { GUI } from "three/addons/libs/lil-gui.module.min.js";
 import RAPIER from "@dimforge/rapier3d-compat";
 
 await RAPIER.init(); // This line is only needed if using the compat version
+// 중력 가속도를 설정하여 rigid body 와 plane 간 충돌 발생시키기 위함
 const gravity = new RAPIER.Vector3(0.0, -9.81, 0.0);
 const world = new RAPIER.World(gravity);
 const dynamicBodies: [THREE.Object3D, RAPIER.RigidBody][] = [];
