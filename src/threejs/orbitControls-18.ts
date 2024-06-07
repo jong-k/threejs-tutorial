@@ -1,4 +1,4 @@
-import "./index.css";
+import "../index.css";
 import * as THREE from "three";
 // addon 에 해당 (Core 에 없음)
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";

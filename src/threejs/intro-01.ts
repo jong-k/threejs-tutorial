@@ -1,4 +1,4 @@
-import "./index.css";
+import "../index.css";
 import * as THREE from "three";
 // three.js package.json 에서 examples/jsm/* 경로를 addons 로 alias 해줌
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";

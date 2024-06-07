@@ -391,5 +391,7 @@ tri mesh vs convex hull
 - tri mesh: rigid body를 만들 때 조금 더 상세한 물체 표면을 묘사할 수 있음, 연산이 복잡
 - convex hull: 모든 vertex를 연결하는 최소 도형을 그리기 때문에 tri mesh 보다 덜 정밀하고 부피가 큼 (대신 연산이 빠름)
 
-## To do
-- github pages 로 배포
+## 22. PointerLockControls
+- 브라우저에 내장된 Pointer Lock API를 활용
+- 뷰포트에서 마우스 커서의 절대적인 위치뿐만 아니라 시간에 따른 마우스 움직임(예: 델타)에 기반한 입력 방법을 제공
+- 1인칭 슈팅게임에서 주로 사용되는 개념
